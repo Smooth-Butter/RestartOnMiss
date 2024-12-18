@@ -55,7 +55,6 @@ namespace RestartOnMiss
                 _isRestarting = true;
                 Plugin.Log.Debug($"Note missed in {noteController.name}. Restarting level...");
                 RestartLevel();
-                ResetCount();
             }
         }
 
@@ -72,17 +71,11 @@ namespace RestartOnMiss
             }
         }
         
-        public void LevelRestarted(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later... maybe
+        public void OnGameSceneLoaded() //this is so dumb will fix later... maybe
         {
+            Plugin.Log.Warn("level started?");
             ResetCount();
             _isRestarting = false;
-            Plugin.Log.Info("level restarted");
-        }
-
-        public void LevelQuit(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later... maybe
-        {
-            ResetCount();
-            Plugin.Log.Info("level quit");
         }
 
         private void ResetCount()

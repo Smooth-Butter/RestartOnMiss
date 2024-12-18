@@ -70,8 +70,6 @@ namespace RestartOnMiss
             Log.Debug("Plugin enabled, subscribing to BSEvents");
             BSEvents.gameSceneLoaded += OnGameSceneLoaded;
             BSEvents.noteWasMissed += OnNoteMissedBSUtils;
-            BSEvents.levelRestarted += OnLevelRestart;
-            BSEvents.levelQuit += OnLevelQuit;
         }
 
         [OnDisable]
@@ -80,8 +78,6 @@ namespace RestartOnMiss
             Log.Debug("Plugin disabled, unsubscribing from BSEvents");
             BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
             BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
-            BSEvents.levelRestarted -= OnLevelRestart;
-            BSEvents.levelQuit -= OnLevelQuit;
         }
 
         [OnExit]
@@ -96,7 +92,8 @@ namespace RestartOnMiss
         private void OnGameSceneLoaded()
         {
             Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
-            // find all MonoBehaviours in the scene
+            RestartOnMissController.Instance.OnGameSceneLoaded();
+            
             var allBehaviours = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
             // attempt to find the first one that implements ILevelRestartController
             var restartController = allBehaviours.OfType<ILevelRestartController>().FirstOrDefault();
@@ -128,30 +125,6 @@ namespace RestartOnMiss
             }
         }
         
-        private void OnLevelRestart(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later
-        {
-            Log.Debug("Level restarted");
-            if (RestartOnMissController.Instance != null)
-            {
-                RestartOnMissController.Instance.LevelRestarted(standardLevelScenesTransitionSetupDataSO, levelCompletionResults);
-            }
-            else
-            {
-                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
-            }
-        }
-        private void OnLevelQuit(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later
-        {
-            Log.Debug("Level quit");
-            if (RestartOnMissController.Instance != null)
-            {
-                RestartOnMissController.Instance.LevelQuit(standardLevelScenesTransitionSetupDataSO, levelCompletionResults);
-            }
-            else
-            {
-                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
-            }
-        }
     }
     
 }
