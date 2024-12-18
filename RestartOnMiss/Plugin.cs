@@ -9,6 +9,7 @@ using UnityEngine;
 using RestartOnMiss.Views;
 using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
+using RestartOnMiss.Installers;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
 
@@ -25,7 +26,6 @@ namespace RestartOnMiss
         
         
         
-        internal static string Name => "AutoPauseStealth";
         internal static RestartOnMissController PluginController { get { return RestartOnMissController.instance; } }
         
         
@@ -43,6 +43,9 @@ namespace RestartOnMiss
             
             PluginConfig.Instance = conf.Generated<PluginConfig>();
             Log.Debug("Config loaded");
+
+            //zenjector.Install(Location.StandardPlayer, Container => Container.BindInterfacesTo<ModUI>().AsSingle());
+            zenjector.Install<MenuInstaller>(Location.Menu);
         }
 
         #region BSIPA Config
@@ -65,8 +68,7 @@ namespace RestartOnMiss
             // start RestartOnMissController if it doesn't exist
             if (RestartOnMissController.instance == null)
             {
-
-                Log.Debug("RestartOnMissController instantiated and set to DontDestroyOnLoad.");
+                Log.Debug("RestartOnMissController instantiated");
             }
         }
 
@@ -76,6 +78,7 @@ namespace RestartOnMiss
             Log.Debug("Plugin enabled, subscribing to BSEvents");
             BSEvents.gameSceneLoaded += OnGameSceneLoaded;
             BSEvents.noteWasMissed += OnNoteMissedBSUtils;
+            BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing += OnMainMenuInit;
             
             if (RestartOnMissController.instance == null)
             {
@@ -83,15 +86,12 @@ namespace RestartOnMiss
                 Log.Debug("RestartOnMissController instantiated");
             }
             
-            BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing += OnMainMenuInit;
-            new GameObject("RestartOnMissController").AddComponent<RestartOnMissController>();
-            
             ApplyHarmonyPatches();
         }
 
         public void OnMainMenuInit()
         {
-            BSMLSettings.Instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.UI.ModifiersUI.bsml", new ModifierUI());
+            BSMLSettings.Instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.Views.Settings.bsml", new SettingsUI());
             Log.Debug("RestartOnMiss: BSML settings menu registered.");
         }
 
@@ -102,6 +102,7 @@ namespace RestartOnMiss
             Log.Debug("Plugin disabled, unsubscribing from BSEvents");
             BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
             BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
+            BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing -= OnMainMenuInit;
             
             BSMLSettings.Instance.RemoveSettingsMenu(PluginConfig.Instance);
             
@@ -112,7 +113,7 @@ namespace RestartOnMiss
                 RemoveHarmonyPatches();
         }
         
-        #region dumb ahh methods
+        #region dumb ahh shiiii
         private void OnGameSceneLoaded()
         {
             Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
@@ -124,11 +125,11 @@ namespace RestartOnMiss
 
             if (restartController == null)
             {
-                Log.Warn("No ILevelRestartController implementer found. Cannot restart level.");
+                Log.Warn("No ILevelRestartController  found. Can't restart level.");
             }
             else
             {
-                Log.Debug("ILevelRestartController implementer found after game scene loaded.");
+                Log.Debug("ILevelRestartController was found after game scene loaded.");
                 if (RestartOnMissController.instance != null)
                 {
                     RestartOnMissController.instance.SetILevelRestartController(restartController);
