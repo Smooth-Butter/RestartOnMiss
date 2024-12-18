@@ -2,6 +2,7 @@
 using BS_Utils.Gameplay;
 using UnityEngine;
 using BS_Utils.Utilities;
+using RestartOnMiss.Configuration;
 using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
 
@@ -9,9 +10,9 @@ namespace RestartOnMiss
 {
     public class RestartOnMissController : MonoBehaviour
     {
-        public int maxMisses = 5;
-        public int missCount = 0;
-        public static RestartOnMissController Instance { get; private set; }
+        private int maxMisses => PluginConfig.Instance.maxMisses;
+        private int missCount = 0;
+        public static RestartOnMissController instance { get; private set; }
         public static NoteController NoteController;
         public static bool IsMultiplayer;
         
@@ -21,7 +22,7 @@ namespace RestartOnMiss
         private void Awake()
         {
             // Ensure only one instance
-            if (Instance != null)
+            if (instance != null)
             {
                 Plugin.Log?.Warn($"Instance of {GetType().Name} already exists, destroying.");
                 GameObject.DestroyImmediate(this);
@@ -29,12 +30,17 @@ namespace RestartOnMiss
             }
 
             GameObject.DontDestroyOnLoad(this); // Don't destroy on scene changes
-            Instance = this;
+            instance = this;
             Plugin.Log?.Debug($"{name}: Awake()");
         }
 
         public void OnNoteMissed(NoteController noteController)
         {
+            if (!PluginConfig.Instance.Enabled)
+            {
+                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
+                return; 
+            }
             if (_isRestarting)
             {
                 Plugin.Log.Debug("level is currently restarting");
@@ -53,7 +59,7 @@ namespace RestartOnMiss
             if (missCount >= maxMisses)
             {
                 _isRestarting = true;
-                Plugin.Log.Debug($"Note missed in {noteController.name}. Restarting level...");
+                Plugin.Log.Info("Level is restarting");
                 RestartLevel();
             }
         }
@@ -63,6 +69,7 @@ namespace RestartOnMiss
             if (_restartController != null)
             {
                 Plugin.Log.Debug("Calling ILevelRestartController.RestartLevel()");
+                Plugin.Log.Info($"restarted with {missCount} misses");
                 _restartController.RestartLevel();
             }
             else
@@ -96,8 +103,8 @@ namespace RestartOnMiss
         private void OnDestroy()
         {
             Plugin.Log?.Debug($"{name}: OnDestroy()");
-            if (Instance == this)
-                Instance = null;
+            if (instance == this)
+                instance = null;
         }
     }
 }
