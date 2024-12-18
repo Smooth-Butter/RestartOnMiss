@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RestartOnMiss.Configuration;
 
-namespace RestartOnMiss.UI
+namespace RestartOnMiss.Views
 {
-    public class ModifierUI : BSMLResourceViewController, INotifyPropertyChanged
+    public class SettingsUI : BSMLResourceViewController, INotifyPropertyChanged
     {
         public override string ResourceName => "RestartOnMiss.UI.Settings.bsml";
 
@@ -14,7 +14,7 @@ namespace RestartOnMiss.UI
         public bool Enabled
         {
             get => PluginConfig.Instance.Enabled;
-            set
+            set 
             {
                 if (PluginConfig.Instance.Enabled != value)
                 {
