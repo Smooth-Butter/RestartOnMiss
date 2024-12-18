@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using IPA;
-using IPA.Config;
-using IPA.Config.Stores;
-using UnityEngine.SceneManagement;
-using UnityEngine;
+using HarmonyLib;
 using IPALogger = IPA.Logging.Logger;
+using UnityEngine;
+using BS_Utils.Gameplay;
+using BS_Utils.Utilities;
+using BS_Utils.Utilities.Events;
 
 namespace RestartOnMiss
 {
@@ -17,6 +17,8 @@ namespace RestartOnMiss
         internal static Plugin Instance { get; private set; }
         internal static IPALogger Log { get; private set; }
 
+        private HarmonyLib.Harmony _harmony;
+        
         [Init]
         /// <summary>
         /// Called when the plugin is first loaded by IPA (either when the game starts or when the plugin is enabled if it starts disabled).
@@ -27,7 +29,7 @@ namespace RestartOnMiss
         {
             Instance = this;
             Log = logger;
-            Log.Info("$projectname$ initialized.");
+            Log.Info("RestartOnMiss initialized.");
         }
 
         #region BSIPA Config
@@ -43,18 +45,113 @@ namespace RestartOnMiss
         */
 
         #endregion
-
+        
         [OnStart]
         public void OnApplicationStart()
         {
-            Log.Debug("OnApplicationStart");
-            new GameObject("RestartOnMissController").AddComponent<RestartOnMissController>();
+            // initialize Harmony
+            _harmony = new HarmonyLib.Harmony("com.yourname.restartonmiss");
+            _harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Log.Debug("RestartOnMiss: Harmony patches applied.");
+
+            // start RestartOnMissController if it doesn't exist
+            if (RestartOnMissController.Instance == null)
+            {
+                GameObject controllerObj = new GameObject("RestartOnMissController");
+                controllerObj.AddComponent<RestartOnMissController>();
+                GameObject.DontDestroyOnLoad(controllerObj);
+                Log.Debug("RestartOnMissController instantiated and set to DontDestroyOnLoad.");
+            }
+        }
+
+        [OnEnable]
+        public void OnEnable()
+        {
+            Log.Debug("Plugin enabled, subscribing to BSEvents");
+            BSEvents.gameSceneLoaded += OnGameSceneLoaded;
+            BSEvents.noteWasMissed += OnNoteMissedBSUtils;
+            BSEvents.levelRestarted += OnLevelRestart;
+            BSEvents.levelQuit += OnLevelQuit;
+        }
+
+        [OnDisable]
+        public void OnDisable()
+        {
+            Log.Debug("Plugin disabled, unsubscribing from BSEvents");
+            BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
+            BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
+            BSEvents.levelRestarted -= OnLevelRestart;
+            BSEvents.levelQuit -= OnLevelQuit;
         }
 
         [OnExit]
         public void OnApplicationQuit()
         {
-            Log.Debug("OnApplicationQuit");
+            if (_harmony != null)
+            {
+                _harmony.UnpatchSelf();
+                Log.Debug("RestartOnMiss: Harmony patches removed.");
+            }
+        }
+        private void OnGameSceneLoaded()
+        {
+            Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
+            // find all MonoBehaviours in the scene
+            var allBehaviours = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
+            // attempt to find the first one that implements ILevelRestartController
+            var restartController = allBehaviours.OfType<ILevelRestartController>().FirstOrDefault();
+
+            if (restartController == null)
+            {
+                Log.Warn("No ILevelRestartController implementer found. Cannot restart level.");
+            }
+            else
+            {
+                Log.Debug("ILevelRestartController implementer found after game scene loaded.");
+                if (RestartOnMissController.Instance != null)
+                {
+                    RestartOnMissController.Instance.SetILevelRestartController(restartController);
+                }
+            }
+        }
+
+        private void OnNoteMissedBSUtils(NoteController noteController)
+        {
+            Log.Debug("note missed");
+            if (RestartOnMissController.Instance != null)
+            {
+                RestartOnMissController.Instance.OnNoteMissed(noteController);
+            }
+            else
+            {
+                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
+            }
+        }
+        
+        private void OnLevelRestart(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later
+        {
+            Log.Debug("Level restarted");
+            if (RestartOnMissController.Instance != null)
+            {
+                RestartOnMissController.Instance.LevelRestarted(standardLevelScenesTransitionSetupDataSO, levelCompletionResults);
+            }
+            else
+            {
+                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
+            }
+        }
+        private void OnLevelQuit(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later
+        {
+            Log.Debug("Level quit");
+            if (RestartOnMissController.Instance != null)
+            {
+                RestartOnMissController.Instance.LevelQuit(standardLevelScenesTransitionSetupDataSO, levelCompletionResults);
+            }
+            else
+            {
+                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
+            }
         }
     }
+    
 }
