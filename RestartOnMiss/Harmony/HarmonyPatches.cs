@@ -11,7 +11,7 @@ namespace RestartOnMiss.Harmony
         public static void Postfix(AudioTimeSyncController __instance)
         {
             // Access the RestartOnMissController instance
-            RestartOnMissController controller = RestartOnMissController.Instance;
+            RestartOnMissController controller = RestartOnMissController.instance;
 
             if (controller == null)
             {
