@@ -103,6 +103,7 @@
     <ItemGroup>
         <EmbeddedResource Include="manifest.json" />
         <EmbeddedResource Include="UI\ModifiersUI.bsml" />
+        <EmbeddedResource Include="UI\Settings.bsml" />
     </ItemGroup>
     <ItemGroup>
         <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')"/>

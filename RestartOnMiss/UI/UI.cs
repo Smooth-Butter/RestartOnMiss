@@ -8,7 +8,7 @@ namespace RestartOnMiss.UI
 {
     public class ModifierUI : BSMLResourceViewController, INotifyPropertyChanged
     {
-        public override string ResourceName => "RestartOnMiss.UI.ModifiersUI.bsml";
+        public override string ResourceName => "RestartOnMiss.UI.Settings.bsml";
 
         [UIValue("enabled")]
         public bool Enabled
