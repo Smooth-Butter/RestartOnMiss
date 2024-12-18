@@ -4,16 +4,13 @@ using System.Linq;
 using System.Reflection;
 using BeatSaberMarkupLanguage.Settings;
 using IPA;
-using IPA.Config;
 using IPA.Config.Stores;
-using IPA.Loader;
 using UnityEngine;
-using BS_Utils;
-using RestartOnMiss.UI;
+using RestartOnMiss.Views;
 using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
 using Config = IPA.Config.Config;
-using HarmonyLib;
+using SiraUtil.Zenject;
 
 namespace RestartOnMiss
 {

@@ -1,10 +1,5 @@
-﻿using System;
-using BS_Utils.Gameplay;
-using UnityEngine;
-using BS_Utils.Utilities;
+﻿using UnityEngine;
 using RestartOnMiss.Configuration;
-using UnityEngine.SceneManagement;
-using IPALogger = IPA.Logging.Logger;
 
 namespace RestartOnMiss
 {
