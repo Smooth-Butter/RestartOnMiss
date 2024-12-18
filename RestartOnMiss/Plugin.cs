@@ -78,7 +78,7 @@ namespace RestartOnMiss
             Log.Debug("Plugin enabled, subscribing to BSEvents");
             BSEvents.gameSceneLoaded += OnGameSceneLoaded;
             BSEvents.noteWasMissed += OnNoteMissedBSUtils;
-            BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing += OnMainMenuInit;
+            OnMainMenuInit();
             
             if (RestartOnMissController.instance == null)
             {
@@ -102,7 +102,6 @@ namespace RestartOnMiss
             Log.Debug("Plugin disabled, unsubscribing from BSEvents");
             BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
             BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
-            BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing -= OnMainMenuInit;
             
             BSMLSettings.instance.RemoveSettingsMenu(PluginConfig.Instance);
             
