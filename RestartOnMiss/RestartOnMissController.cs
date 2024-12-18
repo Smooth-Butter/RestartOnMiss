@@ -1,33 +1,26 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BS_Utils.Gameplay;
 using UnityEngine;
+using BS_Utils.Utilities;
+using UnityEngine.SceneManagement;
+using IPALogger = IPA.Logging.Logger;
 
 namespace RestartOnMiss
 {
-    /// <summary>
-    /// Monobehaviours (scripts) are added to GameObjects.
-    /// For a full list of Messages a Monobehaviour can receive from the game, see https://docs.unity3d.com/ScriptReference/MonoBehaviour.html.
-    /// </summary>
     public class RestartOnMissController : MonoBehaviour
     {
+        public int maxMisses = 5;
+        public int missCount = 0;
         public static RestartOnMissController Instance { get; private set; }
-
-        // These methods are automatically called by Unity, you should remove any you aren't using.
-
-        #region Monobehaviour Messages
-
-        /// <summary>
-        /// Only ever called once, mainly used to initialize variables.
-        /// </summary>
+        public static NoteController NoteController;
+        public static bool IsMultiplayer;
+        
+        private bool _isRestarting = false;  //maybe I'll use... maybe not so it gets to live for now
+        private ILevelRestartController _restartController;
+        
         private void Awake()
         {
-            // For this particular MonoBehaviour, we only want one instance to exist at any time, so store a reference to it in a static property
-            //   and destroy any that are created while one already exists.
+            // Ensure only one instance
             if (Instance != null)
             {
                 Plugin.Log?.Warn($"Instance of {GetType().Name} already exists, destroying.");
@@ -35,56 +28,83 @@ namespace RestartOnMiss
                 return;
             }
 
-            GameObject.DontDestroyOnLoad(this); // Don't destroy this object on scene changes
+            GameObject.DontDestroyOnLoad(this); // Don't destroy on scene changes
             Instance = this;
             Plugin.Log?.Debug($"{name}: Awake()");
         }
 
-        /// <summary>
-        /// Only ever called once on the first frame the script is Enabled. Start is called after any other script's Awake() and before Update().
-        /// </summary>
-        private void Start()
+        public void OnNoteMissed(NoteController noteController)
         {
+            if (_isRestarting)
+            {
+                Plugin.Log.Debug("level is currently restarting");
+                return;
+            }
+            
+            ++missCount;
+            UnityEngine.Debug.Log($"current miss count is {missCount}");
+            
+            //_isRestarting || 
+            if (IsMultiplayer)
+            {
+                return;
+            }
+            
+            if (missCount >= maxMisses)
+            {
+                _isRestarting = true;
+                Plugin.Log.Debug($"Note missed in {noteController.name}. Restarting level...");
+                RestartLevel();
+                ResetCount();
+            }
         }
 
-        /// <summary>
-        /// Called every frame if the script is enabled.
-        /// </summary>
-        private void Update()
+        private void RestartLevel()
         {
+            if (_restartController != null)
+            {
+                Plugin.Log.Debug("Calling ILevelRestartController.RestartLevel()");
+                _restartController.RestartLevel();
+            }
+            else
+            {
+                Plugin.Log.Warn("ILevelRestartController not available. Cannot restart level.");
+            }
+        }
+        
+        public void LevelRestarted(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later... maybe
+        {
+            ResetCount();
+            _isRestarting = false;
+            Plugin.Log.Info("level restarted");
         }
 
-        /// <summary>
-        /// Called every frame after every other enabled script's Update().
-        /// </summary>
-        private void LateUpdate()
+        public void LevelQuit(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSO, LevelCompletionResults levelCompletionResults) //this is so dumb will fix later... maybe
         {
+            ResetCount();
+            Plugin.Log.Info("level quit");
         }
 
-        /// <summary>
-        /// Called when the script becomes enabled and active
-        /// </summary>
-        private void OnEnable()
+        private void ResetCount()
         {
+            missCount = 0;
+            Plugin.Log.Info("reset count");
         }
-
-        /// <summary>
-        /// Called when the script becomes disabled or when it is being destroyed.
-        /// </summary>
-        private void OnDisable()
+        
+        public void SetILevelRestartController(ILevelRestartController controller)
         {
+            _restartController = controller;
+            if (_restartController != null)
+            {
+                Plugin.Log.Debug("ILevelRestartController set successfully.");
+            }
         }
-
-        /// <summary>
-        /// Called when the script is being destroyed.
-        /// </summary>
+        
         private void OnDestroy()
         {
             Plugin.Log?.Debug($"{name}: OnDestroy()");
             if (Instance == this)
-                Instance = null; // This MonoBehaviour is being destroyed, so set the static instance property to null.
+                Instance = null;
         }
-
-        #endregion
     }
 }
