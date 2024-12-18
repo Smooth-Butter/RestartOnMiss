@@ -91,7 +91,7 @@ namespace RestartOnMiss
 
         public void OnMainMenuInit()
         {
-            BSMLSettings.Instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.Views.SettingsUI.bsml", new SettingsUI());
+            BSMLSettings.instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.Views.SettingsUI.bsml", new SettingsUI());
             Log.Debug("RestartOnMiss: BSML settings menu registered.");
         }
 
@@ -104,7 +104,7 @@ namespace RestartOnMiss
             BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
             BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing -= OnMainMenuInit;
             
-            BSMLSettings.Instance.RemoveSettingsMenu(PluginConfig.Instance);
+            BSMLSettings.instance.RemoveSettingsMenu(PluginConfig.Instance);
             
             if (PluginController != null)
                 GameObject.Destroy(PluginController);
