@@ -35,7 +35,7 @@ namespace RestartOnMiss
         /// [Init] methods that use a Constructor or called before regular methods like InitWithConfig.
         /// Only use [Init] with one Constructor.
         /// </summary>
-        public Plugin(IPALogger logger, Config conf)
+        public Plugin(IPALogger logger, Config conf, Zenjector zenjector)
         {
             instance = this;
             Log = logger;
