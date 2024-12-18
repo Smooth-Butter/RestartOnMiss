@@ -10,14 +10,22 @@ namespace RestartOnMiss.Views
 {
     public class ModUI : BSMLAutomaticViewController, IInitializable, IDisposable
     {
+        public string ResourceName => "RestartOnMiss.UI.ModifiersUI.bsml";
 
         [UIValue("enabled")]
         public bool Enabled
         {
             get => PluginConfig.Instance.Enabled;
-            set => PluginConfig.Instance.Enabled = value;
+            set
+            {
+                if (PluginConfig.Instance.Enabled != value)
+                {
+                    PluginConfig.Instance.Enabled = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
-        
+
         [UIValue("maxMiss")]
         public int maxMisses
         {
@@ -34,12 +42,12 @@ namespace RestartOnMiss.Views
         
         public void Initialize()
         {
-            GameplaySetup.Instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI", this);
+            GameplaySetup.Instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI.bsml", this);
         }
         
         public void Dispose()
         {
-            GameplaySetup.Instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI", this);
+            GameplaySetup.Instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI.bsml", this);
         }
     }
 }

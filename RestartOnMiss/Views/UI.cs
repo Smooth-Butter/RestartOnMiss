@@ -8,13 +8,13 @@ namespace RestartOnMiss.Views
 {
     public class SettingsUI : BSMLResourceViewController, INotifyPropertyChanged
     {
-        public override string ResourceName => "RestartOnMiss.UI.Settings.bsml";
+        public override string ResourceName => "RestartOnMiss.UI.SettingsUI.bsml";
 
         [UIValue("enabled")]
         public bool Enabled
         {
             get => PluginConfig.Instance.Enabled;
-            set 
+            set
             {
                 if (PluginConfig.Instance.Enabled != value)
                 {

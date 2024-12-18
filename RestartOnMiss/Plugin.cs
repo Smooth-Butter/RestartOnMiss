@@ -91,7 +91,7 @@ namespace RestartOnMiss
 
         public void OnMainMenuInit()
         {
-            BSMLSettings.Instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.Views.Settings.bsml", new SettingsUI());
+            BSMLSettings.Instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.Views.SettingsUI.bsml", new SettingsUI());
             Log.Debug("RestartOnMiss: BSML settings menu registered.");
         }
 
