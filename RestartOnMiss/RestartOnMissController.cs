@@ -46,15 +46,16 @@ namespace RestartOnMiss
                 Plugin.Log.Debug("level is currently restarting");
                 return;
             }
+            if (IsMultiplayer)
+            {
+                return;
+            }
             
             ++missCount;
             UnityEngine.Debug.Log($"current miss count is {missCount}");
             
             //_isRestarting || 
-            if (IsMultiplayer)
-            {
-                return;
-            }
+
             
             if (missCount >= maxMisses)
             {
@@ -80,7 +81,7 @@ namespace RestartOnMiss
         
         public void OnGameSceneLoaded() //this is so dumb will fix later... maybe
         {
-            Plugin.Log.Warn("level started?");
+            // Plugin.Log.Warn("level started?");
             ResetCount();
             _isRestarting = false;
         }
