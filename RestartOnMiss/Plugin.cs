@@ -115,6 +115,7 @@ namespace RestartOnMiss
                 RemoveHarmonyPatches();
         }
         
+        #region dumb ahh methods
         private void OnGameSceneLoaded()
         {
             Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
@@ -150,6 +151,8 @@ namespace RestartOnMiss
                 Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
             }
         }
+        
+        #endregion
         
         #region Harmony
         public static void ApplyHarmonyPatches()
