@@ -9,6 +9,8 @@ namespace RestartOnMiss.Configuration
         public static PluginConfig Instance { get; set; }
         
         internal virtual bool Enabled { get; set; } = false; // Must be 'virtual' if you want BSIPA to detect a value change and save the config automatically.
+        internal virtual bool CountBadCuts { get; set; } = false;
+        internal virtual bool CountBombs { get; set; } = false;
         internal virtual int maxMisses { get; set; } = 0;
         
         
