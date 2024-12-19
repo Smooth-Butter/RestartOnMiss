@@ -7,6 +7,7 @@ namespace RestartOnMiss
     {
         private int maxMisses => PluginConfig.Instance.maxMisses;
         private int missCount = 0;
+        private string lastEvent = "";
         public static RestartOnMissController instance { get; private set; }
         public static NoteController NoteController;
         public static bool IsMultiplayer;
@@ -29,6 +30,15 @@ namespace RestartOnMiss
             Plugin.Log?.Debug($"{name}: Awake()");
         }
 
+        public void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
+        {
+            
+                HandleBadCut(noteController, noteCutInfo);
+                
+                HandleBombHit(noteController, noteCutInfo);
+            
+        } 
+        
         public void OnNoteMissed(NoteController noteController)
         {
             if (!PluginConfig.Instance.Enabled)
@@ -45,13 +55,50 @@ namespace RestartOnMiss
             {
                 return;
             }
+            if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType != NoteData.GameplayType.BurstSliderElement)
+            {
+                return;
+            }
             
             ++missCount;
-            UnityEngine.Debug.Log($"current miss count is {missCount}");
+            Plugin.Log.Info($"Note missed!! current miss count is {missCount}");
+            lastEvent = "Note Missed!";
             
             //_isRestarting || 
-
+            CompareMissMaxMiss();
             
+
+        }
+
+        private void HandleBadCut(NoteController noteController, NoteCutInfo noteCutInfo)
+        {
+            if (PluginConfig.Instance.CountBadCuts)
+            {
+                if (!noteCutInfo.allIsOK && noteController.noteData.colorType != ColorType.None)
+                {
+                    ++missCount;
+                    lastEvent = "Bad cut!!!";
+                    Plugin.Log.Info($"Bad Cut!! current miss count is {missCount}");
+                    CompareMissMaxMiss();
+                }
+            }
+        }
+
+        private void HandleBombHit(NoteController noteController, NoteCutInfo noteCutInfo)
+        {
+            if (PluginConfig.Instance.CountBombs)
+            {
+                if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
+                {
+                    ++missCount;
+                    lastEvent = "Hit Bomb!!!";
+                    Plugin.Log.Info($"Hit Bomb!! current miss count is {missCount}");
+                    CompareMissMaxMiss();
+                }
+            }
+        }
+        private void CompareMissMaxMiss()
+        {
             if (missCount >= maxMisses)
             {
                 _isRestarting = true;
@@ -60,12 +107,13 @@ namespace RestartOnMiss
             }
         }
 
+            
         private void RestartLevel()
         {
             if (_restartController != null)
             {
                 Plugin.Log.Debug("Calling ILevelRestartController.RestartLevel()");
-                Plugin.Log.Info($"restarted with {missCount} misses");
+                Plugin.Log.Info($"restarted with {missCount} misses due to {lastEvent}");
                 _restartController.RestartLevel();
             }
             else
