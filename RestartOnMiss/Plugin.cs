@@ -77,7 +77,8 @@ namespace RestartOnMiss
         {
             Log.Debug("Plugin enabled, subscribing to BSEvents");
             BSEvents.gameSceneLoaded += OnGameSceneLoaded;
-            BSEvents.noteWasMissed += OnNoteMissedBSUtils;
+            BSEvents.noteWasMissed += OnNoteMissed;
+            BSEvents.noteWasCut += OnNoteCut;
             OnMainMenuInit();
             
             if (RestartOnMissController.instance == null)
@@ -101,8 +102,8 @@ namespace RestartOnMiss
         {
             Log.Debug("Plugin disabled, unsubscribing from BSEvents");
             BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
-            BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
-            
+            BSEvents.noteWasMissed -= OnNoteMissed;
+            BSEvents.noteWasCut -= OnNoteCut;
             BSMLSettings.instance.RemoveSettingsMenu(PluginConfig.Instance);
             
             if (PluginController != null)
@@ -136,12 +137,25 @@ namespace RestartOnMiss
             }
         }
 
-        private void OnNoteMissedBSUtils(NoteController noteController)
+        private void OnNoteMissed(NoteController noteController)
         {
             Log.Debug("note missed");
             if (RestartOnMissController.instance != null)
             {
                 RestartOnMissController.instance.OnNoteMissed(noteController);
+            }
+            else
+            {
+                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
+            }
+        }
+        
+        private void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
+        {
+            Log.Debug("note cut");
+            if (RestartOnMissController.instance != null)
+            {
+                RestartOnMissController.instance.OnNoteCut(noteController, noteCutInfo);
             }
             else
             {
