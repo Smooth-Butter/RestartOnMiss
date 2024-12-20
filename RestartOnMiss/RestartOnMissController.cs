@@ -36,6 +36,7 @@ namespace RestartOnMiss
         {
             if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
             {
+                Plugin.Log.Debug("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on bomb/badcut.");
                 return;
             }
             
@@ -69,6 +70,11 @@ namespace RestartOnMiss
             if (_isRestarting)
             {
                 Plugin.Log.Debug("level is currently restarting");
+                return;
+            }
+            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
+            {
+                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on note miss.");
                 return;
             }
             
