@@ -40,7 +40,7 @@ namespace RestartOnMiss
             
             if (!PluginConfig.Instance.Enabled)
             {
-                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
+                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on on bomb/badcut.");
                 return; 
             }
             

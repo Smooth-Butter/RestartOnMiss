@@ -73,7 +73,8 @@ namespace RestartOnMiss
         public void OnEnable()
         {
             StuffUtils.BSUtilsAdd();
-            StuffUtils.BSMLUtilsAdd();
+            StuffUtils.OnMainMenuInit();
+            ModCheck.Initialize();
             ReplayDetector.AddReplayEvents();
             
             if (RestartOnMissController.instance == null)
@@ -90,7 +91,6 @@ namespace RestartOnMiss
         public void OnDisable()
         {
             StuffUtils.BSUtilsRemove();
-            StuffUtils.BSMLUtilsRemove();
             ReplayDetector.RemoveReplayEvents();
             
             if (PluginController != null)
