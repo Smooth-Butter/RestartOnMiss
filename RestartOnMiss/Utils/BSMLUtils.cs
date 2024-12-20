@@ -2,7 +2,7 @@
 using RestartOnMiss.Views;
 using RestartOnMiss.Configuration;
 
-namespace RestartOnMiss.Stuff
+namespace RestartOnMiss.Utils
 {
     public partial class StuffUtils
     {
