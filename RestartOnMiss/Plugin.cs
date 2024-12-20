@@ -1,14 +1,10 @@
 ﻿using System;
 using IPALogger = IPA.Logging.Logger;
-using System.Linq;
-using System.Reflection;
-using BeatSaberMarkupLanguage.Settings;
 using IPA;
 using IPA.Config.Stores;
 using UnityEngine;
-using RestartOnMiss.Views;
-using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
+using RestartOnMiss.Harmony.ScoreSaberPatch;
 using RestartOnMiss.Installers;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
@@ -25,6 +21,7 @@ namespace RestartOnMiss
         
         internal static Plugin instance { get; private set; }
         internal static IPALogger Log { get; private set; }
+        private HarmonyLib.Harmony _harmony;
         
         
         
@@ -103,15 +100,14 @@ namespace RestartOnMiss
 
         
         #region Harmony
-        public static void ApplyHarmonyPatches()
+        public void ApplyHarmonyPatches()
         {
-
+            _harmony = new HarmonyLib.Harmony("com.github.SmoothButter.RestartOnMiss");
+            SSReplayPatches.ApplyPatches(_harmony);
             Log.Debug("Applying Harmony patches.");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
-            
         }
 
-        public static void RemoveHarmonyPatches()
+        public void RemoveHarmonyPatches()
         {
             try
             {
