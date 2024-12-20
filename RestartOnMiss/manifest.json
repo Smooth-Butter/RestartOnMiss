@@ -5,7 +5,7 @@
   "author": "SmoothButter",
   "version": "0.0.2",
   "description": "Restarts the song when you miss a note!",
-  "gameVersion": "1.37.1",
+  "gameVersion": "1.39.1",
   "dependsOn": {
     "BeatSaberMarkupLanguage": "^1.10.0",
     "BS Utils": "^1.0.0",

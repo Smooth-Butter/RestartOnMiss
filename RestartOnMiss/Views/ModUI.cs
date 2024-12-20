@@ -70,12 +70,12 @@ namespace RestartOnMiss.Views
         
         public void Initialize()
         {
-            GameplaySetup.instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI.bsml", this);
+            GameplaySetup.Instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI.bsml", this);
         }
         
         public void Dispose()
         {
-            GameplaySetup.instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI.bsml", this);
+            GameplaySetup.Instance.AddTab("RestartOnMiss", "RestartOnMiss.Views.ModifiersUI.bsml", this);
         }
     }
 }
