@@ -74,7 +74,7 @@ namespace RestartOnMiss
         {
             StuffUtils.BSUtilsAdd();
             StuffUtils.BSMLUtilsAdd();
-            ReplayDetector.AddBLEvents();
+            ReplayDetector.AddReplayEvents();
             
             if (RestartOnMissController.instance == null)
             {
@@ -91,7 +91,7 @@ namespace RestartOnMiss
         {
             StuffUtils.BSUtilsRemove();
             StuffUtils.BSMLUtilsRemove();
-            ReplayDetector.RemoveBLEvents();
+            ReplayDetector.RemoveReplayEvents();
             
             if (PluginController != null)
                 GameObject.Destroy(PluginController);
