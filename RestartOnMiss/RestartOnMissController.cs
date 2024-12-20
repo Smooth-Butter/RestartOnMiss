@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RestartOnMiss.Configuration;
+using RestartOnMiss.ReplayFpfc.ReplayDetection;
 
 namespace RestartOnMiss
 {
@@ -32,15 +33,30 @@ namespace RestartOnMiss
 
         public void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
         {
+            if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
+            {
+                return;
+            }
             
-                HandleBadCut(noteController, noteCutInfo);
+            if (!PluginConfig.Instance.Enabled)
+            {
+                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
+                return; 
+            }
+            
+            HandleBadCut(noteController, noteCutInfo);
                 
-                HandleBombHit(noteController, noteCutInfo);
+            HandleBombHit(noteController, noteCutInfo);
             
         } 
         
         public void OnNoteMissed(NoteController noteController)
         {
+            if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
+            {
+                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY. Not restarting on note miss.");
+                return;
+            }
             if (!PluginConfig.Instance.Enabled)
             {
                 Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");

@@ -10,8 +10,10 @@ using RestartOnMiss.Views;
 using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
 using RestartOnMiss.Installers;
+using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
+using RestartOnMiss.Stuff;
 
 namespace RestartOnMiss
 {
@@ -30,11 +32,6 @@ namespace RestartOnMiss
         
         
         [Init]
-        /// <summary>
-        /// Called when the plugin is first loaded by IPA (either when the game starts or when the plugin is enabled if it starts disabled).
-        /// [Init] methods that use a Constructor or called before regular methods like InitWithConfig.
-        /// Only use [Init] with one Constructor.
-        /// </summary>
         public Plugin(IPALogger logger, Config conf, Zenjector zenjector)
         {
             instance = this;
@@ -75,11 +72,9 @@ namespace RestartOnMiss
         [OnEnable]
         public void OnEnable()
         {
-            Log.Debug("Plugin enabled, subscribing to BSEvents");
-            BSEvents.gameSceneLoaded += OnGameSceneLoaded;
-            BSEvents.noteWasMissed += OnNoteMissed;
-            BSEvents.noteWasCut += OnNoteCut;
-            OnMainMenuInit();
+            StuffUtils.BSUtilsAdd();
+            StuffUtils.BSMLUtilsAdd();
+            ReplayDetector.AddReplayEvents();
             
             if (RestartOnMissController.instance == null)
             {
@@ -87,83 +82,25 @@ namespace RestartOnMiss
                 Log.Debug("RestartOnMissController instantiated");
             }
             
-            ApplyHarmonyPatches();
-        }
-
-        public void OnMainMenuInit()
-        {
-            BSMLSettings.instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.Views.SettingsUI.bsml", new SettingsUI());
-            Log.Debug("RestartOnMiss: BSML settings menu registered.");
+            ApplyHarmonyPatches();//temp for debug
         }
 
         
         [OnDisable]
         public void OnDisable()
         {
-            Log.Debug("Plugin disabled, unsubscribing from BSEvents");
-            BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
-            BSEvents.noteWasMissed -= OnNoteMissed;
-            BSEvents.noteWasCut -= OnNoteCut;
-            BSMLSettings.instance.RemoveSettingsMenu(PluginConfig.Instance);
+            StuffUtils.BSUtilsRemove();
+            StuffUtils.BSMLUtilsRemove();
+            ReplayDetector.RemoveReplayEvents();
             
             if (PluginController != null)
                 GameObject.Destroy(PluginController);
             
             if (harmony != null)
-                RemoveHarmonyPatches();
+                RemoveHarmonyPatches();//temp for debug
         }
         
-        #region dumb ahh shiiii
-        private void OnGameSceneLoaded()
-        {
-            Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
-            RestartOnMissController.instance.OnGameSceneLoaded();
-            
-            var allBehaviours = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
-            // attempt to find the first one that implements ILevelRestartController
-            var restartController = allBehaviours.OfType<ILevelRestartController>().FirstOrDefault();
 
-            if (restartController == null)
-            {
-                Log.Warn("No ILevelRestartController  found. Can't restart level.");
-            }
-            else
-            {
-                Log.Debug("ILevelRestartController was found after game scene loaded.");
-                if (RestartOnMissController.instance != null)
-                {
-                    RestartOnMissController.instance.SetILevelRestartController(restartController);
-                }
-            }
-        }
-
-        private void OnNoteMissed(NoteController noteController)
-        {
-            Log.Debug("note missed");
-            if (RestartOnMissController.instance != null)
-            {
-                RestartOnMissController.instance.OnNoteMissed(noteController);
-            }
-            else
-            {
-                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
-            }
-        }
-        
-        private void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
-        {
-            Log.Debug("note cut");
-            if (RestartOnMissController.instance != null)
-            {
-                RestartOnMissController.instance.OnNoteCut(noteController, noteCutInfo);
-            }
-            else
-            {
-                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
-            }
-        }
-        
-        #endregion
         
         #region Harmony
         public static void ApplyHarmonyPatches()
