@@ -1,16 +1,12 @@
 ﻿using System;
 using IPALogger = IPA.Logging.Logger;
-using System.Linq;
-using System.Reflection;
-using BeatSaberMarkupLanguage.Settings;
 using IPA;
 using IPA.Config.Stores;
 using UnityEngine;
-using RestartOnMiss.Views;
-using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
 using RestartOnMiss.Harmony.ScoreSaberPatch;
 using RestartOnMiss.Installers;
+using RestartOnMiss.ReplayFpfc.FpfcDetection;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
@@ -78,6 +74,7 @@ namespace RestartOnMiss
             StuffUtils.BSMLUtilsAdd();
             ModCheck.Initialize();
             ReplayDetector.AddReplayEvents();
+            FPFCDetector.Initialize();
             
             if (RestartOnMissController.instance == null)
             {
@@ -117,7 +114,6 @@ namespace RestartOnMiss
         {
             try
             {
-                // Removes all patches with this HarmonyId
                 //harmony.UnpatchAll(HarmonyId);
                 harmony.UnpatchSelf();
             }

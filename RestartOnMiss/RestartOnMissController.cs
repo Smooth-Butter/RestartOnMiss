@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RestartOnMiss.Configuration;
+using RestartOnMiss.ReplayFpfc.FpfcDetection;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
 
 namespace RestartOnMiss
@@ -33,8 +34,9 @@ namespace RestartOnMiss
 
         public void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
         {
-            if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
+            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
             {
+                Plugin.Log.Debug("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on bomb/badcut.");
                 return;
             }
             
@@ -60,9 +62,9 @@ namespace RestartOnMiss
             {
                 return;
             }
-            if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
+            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
             {
-                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY. Not restarting on note miss.");
+                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on note miss.");
                 return;
             }
             if (!PluginConfig.Instance.Enabled)
