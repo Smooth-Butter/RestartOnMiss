@@ -9,6 +9,7 @@ using UnityEngine;
 using RestartOnMiss.Views;
 using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
+using RestartOnMiss.Harmony.ScoreSaberPatch;
 using RestartOnMiss.Installers;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
@@ -25,6 +26,7 @@ namespace RestartOnMiss
         
         internal static Plugin instance { get; private set; }
         internal static IPALogger Log { get; private set; }
+        private HarmonyLib.Harmony _harmony;
         
         
         
@@ -73,7 +75,7 @@ namespace RestartOnMiss
         public void OnEnable()
         {
             StuffUtils.BSUtilsAdd();
-            StuffUtils.OnMainMenuInit();
+            StuffUtils.BSMLUtilsAdd();
             ModCheck.Initialize();
             ReplayDetector.AddReplayEvents();
             
@@ -103,15 +105,15 @@ namespace RestartOnMiss
 
         
         #region Harmony
-        public static void ApplyHarmonyPatches()
+        public void ApplyHarmonyPatches()
         {
-
+            _harmony = new HarmonyLib.Harmony("com.github.SmoothButter.RestartOnMiss");
+            SSReplayPatches.ApplyPatches(_harmony);
             Log.Debug("Applying Harmony patches.");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
             
         }
 
-        public static void RemoveHarmonyPatches()
+        public void RemoveHarmonyPatches()
         {
             try
             {

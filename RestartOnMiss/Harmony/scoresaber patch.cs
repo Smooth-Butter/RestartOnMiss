@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using System;
 using System.Reflection;
+using RestartOnMiss.Stuff;
+
 
 namespace RestartOnMiss.Harmony.ScoreSaberPatch
 {
@@ -10,6 +12,23 @@ namespace RestartOnMiss.Harmony.ScoreSaberPatch
         public static event Action ReplayWasStartedEvent;
         public static event Action ReplayWasFinishedEvent;
 
+        public static void ApplyPatches(HarmonyLib.Harmony harmony)
+        {
+            if (!ModCheck.IsScoreSaberInstalled)
+            {
+                return;
+            }
+            
+            try
+            {
+                harmony.PatchAll(typeof(SSReplayPatches).Assembly);
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Error($"Failed to apply ScoreSaber patches: {ex.Message}");
+            }
+        }
+        
         [HarmonyPatch]
         public class ReplayStartPatch
         {
