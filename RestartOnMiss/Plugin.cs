@@ -82,7 +82,7 @@ namespace RestartOnMiss
                 Log.Debug("RestartOnMissController instantiated");
             }
             
-            ApplyHarmonyPatches();
+            ApplyHarmonyPatches();//temp for debug
         }
 
         
@@ -97,7 +97,7 @@ namespace RestartOnMiss
                 GameObject.Destroy(PluginController);
             
             if (harmony != null)
-                RemoveHarmonyPatches();
+                RemoveHarmonyPatches();//temp for debug
         }
         
 
