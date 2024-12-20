@@ -6,6 +6,7 @@ using UnityEngine;
 using RestartOnMiss.Configuration;
 using RestartOnMiss.Harmony.ScoreSaberPatch;
 using RestartOnMiss.Installers;
+using RestartOnMiss.ReplayFpfc.FpfcDetection;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
@@ -73,6 +74,7 @@ namespace RestartOnMiss
             StuffUtils.OnMainMenuInit();
             ModCheck.Initialize();
             ReplayDetector.AddReplayEvents();
+            FPFCDetector.Initialize();
             
             if (RestartOnMissController.instance == null)
             {
@@ -105,13 +107,13 @@ namespace RestartOnMiss
             _harmony = new HarmonyLib.Harmony("com.github.SmoothButter.RestartOnMiss");
             SSReplayPatches.ApplyPatches(_harmony);
             Log.Debug("Applying Harmony patches.");
+            
         }
 
         public void RemoveHarmonyPatches()
         {
             try
             {
-                // Removes all patches with this HarmonyId
                 //harmony.UnpatchAll(HarmonyId);
                 harmony.UnpatchSelf();
             }

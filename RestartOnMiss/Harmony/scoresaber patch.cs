@@ -28,7 +28,7 @@ namespace RestartOnMiss.Harmony.ScoreSaberPatch
                 Plugin.Log.Error($"Failed to apply ScoreSaber patches: {ex.Message}");
             }
         }
-
+        
         [HarmonyPatch]
         public class ReplayStartPatch
         {

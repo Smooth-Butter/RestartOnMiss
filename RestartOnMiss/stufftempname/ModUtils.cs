@@ -14,7 +14,7 @@ namespace RestartOnMiss.Stuff
         {
             IsBeatLeaderInstalled = PluginManager.EnabledPlugins.Any(x => x.Id == "BeatLeader");
             IsScoreSaberInstalled = PluginManager.EnabledPlugins.Any(x => x.Id == "ScoreSaber");
-
+            
             LogInstalledMods();
         }
 
