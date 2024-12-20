@@ -3,7 +3,7 @@
             anchor-max-y='1.35'>
     <bool-setting text='Enabled' value='enabled' apply-on-change='true' 
                 hover-hint='Turn RestartOnMiss On/Off'/>
-    <bool-setting text='Enabled in Replay' value='enabledinreplay' apply-on-change='true' interactable="false"
+    <bool-setting text='Enabled in Replay' value='enabledinreplay' apply-on-change='true' interactable="true"
                 hover-hint='Turn RestartOnMiss On/Off for replays PLANNED FEATURE'/>
     <bool-setting text='Enabled in FPFC' value='enabledinfpfc' apply-on-change='true' interactable="false"
                 hover-hint="Turn RestartOnMiss On/Off in fpfc PLANNED FEATURE" />
