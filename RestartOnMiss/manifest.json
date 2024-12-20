@@ -7,7 +7,7 @@
   "description": "Restarts the song when you miss a note!",
   "gameVersion": "1.29.1",
   "dependsOn": {
-    "BeatSaberMarkupLanguage": "^1.10.0",
+    "BeatSaberMarkupLanguage": "^1.6.0",
     "BS Utils": "^1.0.0",
     "BSIPA": "^4.0.0",
     "SiraUtil": "^3.0.0"
