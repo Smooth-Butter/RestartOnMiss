@@ -74,7 +74,7 @@
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="ScoreSaber" Condition="'$(OPTIONAL_SCORESABER)' == 'true'">
+        <Reference Include="ScoreSaber">
             <HintPath>$(BeatSaberDir)\Plugins\ScoreSaber.dll</HintPath>
             <Private>false</Private>
         </Reference>
