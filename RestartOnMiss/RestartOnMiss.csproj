@@ -26,7 +26,7 @@
             <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="BeatLeader" Condition="'$(OPTIONAL_BEATLEADER)' == 'true'">
+        <Reference Include="BeatLeader">
             <HintPath>$(BeatSaberDir)\Plugins\BeatLeader.dll</HintPath>
             <Private>false</Private>
         </Reference>
