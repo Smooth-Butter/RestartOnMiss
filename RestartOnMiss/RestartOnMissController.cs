@@ -35,9 +35,15 @@ namespace RestartOnMiss
         {
             if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
             {
-                Plugin.Log.Debug("RestartOnMiss is disabled IN REPLAY. Not restarting on note miss.");
                 return;
             }
+            
+            if (!PluginConfig.Instance.Enabled)
+            {
+                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
+                return; 
+            }
+            
             HandleBadCut(noteController, noteCutInfo);
                 
             HandleBombHit(noteController, noteCutInfo);
@@ -48,7 +54,7 @@ namespace RestartOnMiss
         {
             if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
             {
-                Plugin.Log.Debug("RestartOnMiss is disabled IN REPLAY. Not restarting on note miss.");
+                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY. Not restarting on note miss.");
                 return;
             }
             if (!PluginConfig.Instance.Enabled)
