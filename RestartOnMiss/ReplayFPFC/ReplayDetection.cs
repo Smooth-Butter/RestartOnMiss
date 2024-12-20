@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System.Reflection;
 using BeatLeader.Models;
-using IPA.Loader;
 using RestartOnMiss.Harmony.ScoreSaberPatch;
-using RestartOnMiss.Stuff;
+using RestartOnMiss.Utils;
 
 // thank you Meivyn for the help/example :)
 

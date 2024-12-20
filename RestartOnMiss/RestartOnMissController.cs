@@ -7,10 +7,10 @@ namespace RestartOnMiss
 {
     public class RestartOnMissController : MonoBehaviour
     {
-        private int maxMisses => PluginConfig.Instance.maxMisses;
-        private int missCount = 0;
-        private string lastEvent = "";
-        public static RestartOnMissController instance { get; private set; }
+        private int MaxMisses => PluginConfig.Instance.MaxMisses;
+        private int MissCount = 0;
+        private string LastEvent = "";
+        public static RestartOnMissController Instance { get; private set; }
         public static NoteController NoteController;
         public static bool IsMultiplayer;
         
@@ -19,16 +19,16 @@ namespace RestartOnMiss
         
         private void Awake()
         {
-            // Ensure only one instance
-            if (instance != null)
+            // only one instance
+            if (Instance != null)
             {
                 Plugin.Log?.Warn($"Instance of {GetType().Name} already exists, destroying.");
                 GameObject.DestroyImmediate(this);
                 return;
             }
 
-            GameObject.DontDestroyOnLoad(this); // Don't destroy on scene changes
-            instance = this;
+            GameObject.DontDestroyOnLoad(this); // Don't destroy 
+            Instance = this;
             Plugin.Log?.Debug($"{name}: Awake()");
         }
 
@@ -52,7 +52,7 @@ namespace RestartOnMiss
             
         } 
         
-        public void OnNoteMissed(NoteController noteController) // this is bad but will fix at some point
+        public void OnNoteMissed(NoteController noteController) // this is so so soooo bad - will maybe fix at some point
         {
             if (IsMultiplayer)
             {
@@ -78,9 +78,9 @@ namespace RestartOnMiss
                 return;
             }
             
-            ++missCount;
-            Plugin.Log.Info($"Note missed!! current miss count is {missCount}");
-            lastEvent = "Note Missed!";
+            ++MissCount;
+            Plugin.Log.Info($"Note missed!! current miss count is {MissCount}");
+            LastEvent = "Note Missed!";
             
             //_isRestarting || 
             CompareMissMaxMiss();
@@ -94,9 +94,9 @@ namespace RestartOnMiss
             {
                 if (!noteCutInfo.allIsOK && noteController.noteData.colorType != ColorType.None)
                 {
-                    ++missCount;
-                    lastEvent = "Bad cut!!!";
-                    Plugin.Log.Info($"Bad Cut!! current miss count is {missCount}");
+                    ++MissCount;
+                    LastEvent = "Bad cut!!!";
+                    Plugin.Log.Info($"Bad Cut!! current miss count is {MissCount}");
                     CompareMissMaxMiss();
                 }
             }
@@ -108,16 +108,16 @@ namespace RestartOnMiss
             {
                 if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
                 {
-                    ++missCount;
-                    lastEvent = "Hit Bomb!!!";
-                    Plugin.Log.Info($"Hit Bomb!! current miss count is {missCount}");
+                    ++MissCount;
+                    LastEvent = "Hit Bomb!!!";
+                    Plugin.Log.Info($"Hit Bomb!! current miss count is {MissCount}");
                     CompareMissMaxMiss();
                 }
             }
         }
         private void CompareMissMaxMiss()
         {
-            if (missCount >= maxMisses)
+            if (MissCount >= MaxMisses)
             {
                 _isRestarting = true;
                 Plugin.Log.Info("Level is restarting");
@@ -131,7 +131,7 @@ namespace RestartOnMiss
             if (_restartController != null)
             {
                 Plugin.Log.Debug("Calling ILevelRestartController.RestartLevel()");
-                Plugin.Log.Info($"restarted with {missCount} misses due to {lastEvent}");
+                Plugin.Log.Info($"restarted with {MissCount} misses due to {LastEvent}");
                 _restartController.RestartLevel();
             }
             else
@@ -149,7 +149,7 @@ namespace RestartOnMiss
 
         private void ResetCount()
         {
-            missCount = 0;
+            MissCount = 0;
             Plugin.Log.Info("reset count");
         }
         
@@ -165,8 +165,8 @@ namespace RestartOnMiss
         private void OnDestroy()
         {
             Plugin.Log?.Debug($"{name}: OnDestroy()");
-            if (instance == this)
-                instance = null;
+            if (Instance == this)
+                Instance = null;
         }
     }
 }

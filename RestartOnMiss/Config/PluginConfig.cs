@@ -8,12 +8,12 @@ namespace RestartOnMiss.Configuration
     {
         public static PluginConfig Instance { get; set; }
         
-        internal virtual bool Enabled { get; set; } = false; // Must be 'virtual' if you want BSIPA to detect a value change and save the config automatically.
+        internal virtual bool Enabled { get; set; } = false;
         internal virtual bool CountBadCuts { get; set; } = false;
         internal virtual bool CountBombs { get; set; } = false;
         internal virtual bool EnableInReplay { get; set; } = false;
         internal virtual bool EnableInFPFC { get; set; } = false;
-        internal virtual int maxMisses { get; set; } = 0;
+        internal virtual int MaxMisses { get; set; } = 0;
         
         
         
@@ -46,7 +46,6 @@ namespace RestartOnMiss.Configuration
 
 
 /// Planned features/settings
-/// - force disable in FPFC
-/// - enable/disable obv and start disabled
 /// - number of miss <= to PB
 /// - number of miss < PB
+/// - PB prefered leader board
