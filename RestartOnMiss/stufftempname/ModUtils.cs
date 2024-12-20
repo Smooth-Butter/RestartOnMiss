@@ -1,7 +1,7 @@
 ﻿using IPA.Loader;
 using System.Linq;
 
-namespace RestartOnMiss.Stuff
+namespace RestartOnMiss.Utils
 {
     public static class ModCheck
     {

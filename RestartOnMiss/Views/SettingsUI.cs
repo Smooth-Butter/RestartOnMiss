@@ -53,14 +53,14 @@ namespace RestartOnMiss.Views
         }
 
         [UIValue("maxMiss")]
-        public int maxMisses
+        public int MaxMisses
         {
-            get => PluginConfig.Instance.maxMisses;
+            get => PluginConfig.Instance.MaxMisses;
             set
             {
-                if (PluginConfig.Instance.maxMisses != value)
+                if (PluginConfig.Instance.MaxMisses != value)
                 {
-                    PluginConfig.Instance.maxMisses = value;
+                    PluginConfig.Instance.MaxMisses = value;
                     NotifyPropertyChanged();
                 }
             }

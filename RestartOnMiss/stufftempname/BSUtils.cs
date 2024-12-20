@@ -3,7 +3,7 @@ using UnityEngine;
 using BS_Utils.Utilities;
 
 
-namespace RestartOnMiss.Stuff
+namespace RestartOnMiss.Utils
 {
     public partial class StuffUtils
     {
@@ -25,7 +25,7 @@ namespace RestartOnMiss.Stuff
         private static void OnGameSceneLoaded()
         {
             Plugin.Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
-            RestartOnMissController.instance.OnGameSceneLoaded();
+            RestartOnMissController.Instance.OnGameSceneLoaded();
             
             var allBehaviours = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
             // attempt to find the first one that implements ILevelRestartController
@@ -38,9 +38,9 @@ namespace RestartOnMiss.Stuff
             else
             {
                 Plugin.Log.Debug("ILevelRestartController was found after game scene loaded.");
-                if (RestartOnMissController.instance != null)
+                if (RestartOnMissController.Instance != null)
                 {
-                    RestartOnMissController.instance.SetILevelRestartController(restartController);
+                    RestartOnMissController.Instance.SetILevelRestartController(restartController);
                 }
             }
         }
@@ -48,9 +48,9 @@ namespace RestartOnMiss.Stuff
         private static void OnNoteMissed(NoteController noteController)
         {
             Plugin.Log.Debug("note missed");
-            if (RestartOnMissController.instance != null)
+            if (RestartOnMissController.Instance != null)
             {
-                RestartOnMissController.instance.OnNoteMissed(noteController);
+                RestartOnMissController.Instance.OnNoteMissed(noteController);
             }
             else
             {
@@ -61,9 +61,9 @@ namespace RestartOnMiss.Stuff
         private static void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
         {
             Plugin.Log.Debug("note cut");
-            if (RestartOnMissController.instance != null)
+            if (RestartOnMissController.Instance != null)
             {
-                RestartOnMissController.instance.OnNoteCut(noteController, noteCutInfo);
+                RestartOnMissController.Instance.OnNoteCut(noteController, noteCutInfo);
             }
             else
             {

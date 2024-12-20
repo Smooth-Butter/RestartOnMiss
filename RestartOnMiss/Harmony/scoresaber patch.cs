@@ -1,14 +1,14 @@
 ﻿using HarmonyLib;
 using System;
 using System.Reflection;
-using RestartOnMiss.Stuff;
+using RestartOnMiss.Utils;
 
 
 namespace RestartOnMiss.Harmony.ScoreSaberPatch
 {
     public static class SSReplayPatches
     {
-        // Events for replay start and end
+        // for replay start and end
         public static event Action ReplayWasStartedEvent;
         public static event Action ReplayWasFinishedEvent;
 

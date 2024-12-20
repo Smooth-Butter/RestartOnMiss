@@ -10,7 +10,7 @@ using RestartOnMiss.ReplayFpfc.FpfcDetection;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
-using RestartOnMiss.Stuff;
+using RestartOnMiss.Utils;
 
 namespace RestartOnMiss
 {
@@ -26,7 +26,7 @@ namespace RestartOnMiss
         
         
         
-        internal static RestartOnMissController PluginController { get { return RestartOnMissController.instance; } }
+        internal static RestartOnMissController PluginController { get { return RestartOnMissController.Instance; } }
         
         
         [Init]
@@ -61,7 +61,7 @@ namespace RestartOnMiss
         public void OnApplicationStart()
         {
             // start RestartOnMissController if it doesn't exist
-            if (RestartOnMissController.instance == null)
+            if (RestartOnMissController.Instance == null)
             {
                 Log.Debug("RestartOnMissController instantiated");
             }
@@ -76,7 +76,7 @@ namespace RestartOnMiss
             ReplayDetector.AddReplayEvents();
             FPFCDetector.Initialize();
             
-            if (RestartOnMissController.instance == null)
+            if (RestartOnMissController.Instance == null)
             {
                 new GameObject("RestartOnMissController").AddComponent<RestartOnMissController>();
                 Log.Debug("RestartOnMissController instantiated");
