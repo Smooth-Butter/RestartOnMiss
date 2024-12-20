@@ -52,6 +52,14 @@ namespace RestartOnMiss
         
         public void OnNoteMissed(NoteController noteController)
         {
+            if (IsMultiplayer)
+            {
+                return;
+            }
+            if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType != NoteData.GameplayType.BurstSliderElement)
+            {
+                return;
+            }
             if (ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay)
             {
                 Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY. Not restarting on note miss.");
@@ -65,14 +73,6 @@ namespace RestartOnMiss
             if (_isRestarting)
             {
                 Plugin.Log.Debug("level is currently restarting");
-                return;
-            }
-            if (IsMultiplayer)
-            {
-                return;
-            }
-            if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType != NoteData.GameplayType.BurstSliderElement)
-            {
                 return;
             }
             
