@@ -14,7 +14,7 @@ namespace RestartOnMiss
         public static NoteController NoteController;
         public static bool IsMultiplayer;
         
-        private bool _isRestarting = false;  //maybe I'll use... maybe not so it gets to live for now
+        private bool _isRestarting = false;
         private ILevelRestartController _restartController;
         
         private void Awake()
@@ -52,7 +52,7 @@ namespace RestartOnMiss
             
         } 
         
-        public void OnNoteMissed(NoteController noteController)
+        public void OnNoteMissed(NoteController noteController) // this is bad but will fix at some point
         {
             if (IsMultiplayer)
             {
@@ -60,11 +60,6 @@ namespace RestartOnMiss
             }
             if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType != NoteData.GameplayType.BurstSliderElement)
             {
-                return;
-            }
-            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
-            {
-                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on note miss.");
                 return;
             }
             if (!PluginConfig.Instance.Enabled)
@@ -75,6 +70,11 @@ namespace RestartOnMiss
             if (_isRestarting)
             {
                 Plugin.Log.Debug("level is currently restarting");
+                return;
+            }
+            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
+            {
+                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on note miss.");
                 return;
             }
             
