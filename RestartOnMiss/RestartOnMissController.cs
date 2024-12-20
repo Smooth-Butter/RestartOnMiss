@@ -52,7 +52,7 @@ namespace RestartOnMiss
             
         } 
         
-        public void OnNoteMissed(NoteController noteController) // this is bad but will fix at some point
+        public void OnNoteMissed(NoteController noteController) // yes I know this is bad but will fix at some point
         {
             if (IsMultiplayer)
             {
