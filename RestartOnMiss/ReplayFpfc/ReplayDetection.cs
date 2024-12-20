@@ -8,7 +8,7 @@ using BeatLeader.Models;
 
 // thank you Meivyn for the help/example
 
-namespace RestartOnMiss.ReplayDetection
+namespace RestartOnMiss.ReplayFpfc.ReplayDetection
 {
     public class ReplayDetector
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using RestartOnMiss.Configuration;
-using RestartOnMiss.ReplayDetection;
+using RestartOnMiss.ReplayFpfc.ReplayDetection;
 
 namespace RestartOnMiss
 {

@@ -10,7 +10,7 @@ using RestartOnMiss.Views;
 using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
 using RestartOnMiss.Installers;
-using RestartOnMiss.ReplayDetection;
+using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
 using SiraUtil.Zenject;
 using RestartOnMiss.Stuff;
