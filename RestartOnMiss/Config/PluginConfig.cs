@@ -46,7 +46,6 @@ namespace RestartOnMiss.Configuration
 
 
 /// Planned features/settings
-/// - force disable in FPFC
-/// - enable/disable obv and start disabled
 /// - number of miss <= to PB
 /// - number of miss < PB
+/// - PB prefered leader board

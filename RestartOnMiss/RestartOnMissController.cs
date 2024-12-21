@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using System.Reflection;
+using UnityEngine;
 using RestartOnMiss.Configuration;
 using RestartOnMiss.ReplayFpfc.FpfcDetection;
 using RestartOnMiss.ReplayFpfc.ReplayDetection;
@@ -130,6 +132,11 @@ namespace RestartOnMiss
         {
             if (_restartController != null)
             {
+                if (Utils.ModCheck.IsBeatLeaderInstalled)
+                {
+                    BeatLeaderSpecificRestart();
+                    return;
+                }
                 Plugin.Log.Debug("Calling ILevelRestartController.RestartLevel()");
                 Plugin.Log.Info($"restarted with {MissCount} misses due to {LastEvent}");
                 _restartController.RestartLevel();
@@ -137,6 +144,32 @@ namespace RestartOnMiss
             else
             {
                 Plugin.Log.Warn("ILevelRestartController not available. Cannot restart level.");
+            }
+        }
+
+        private void BeatLeaderSpecificRestart() //I hate this soooooo much - theres probs another way but this is what I have for + the code is a lil bad
+        {
+            var pauseController = Resources.FindObjectsOfTypeAll<PauseController>().LastOrDefault();
+            if (pauseController != null)
+            {
+                var restartMethod = typeof(PauseController).GetMethod(
+                    "HandlePauseMenuManagerDidPressRestartButton",
+                    BindingFlags.Public | BindingFlags.Instance); //1.29.1 is different
+
+                if (restartMethod != null)
+                {
+                    Plugin.Log.Debug("BeatLeader PauseController restart stuff");
+                    Plugin.Log.Info($"Restart triggered with {MissCount} misses due to {LastEvent}");
+                    restartMethod.Invoke(pauseController, null);
+                }
+                else
+                {
+                    Plugin.Log.Warn("Restart method not found on PauseController - direct restart.");
+                }
+            }
+            else
+            {
+                Plugin.Log.Warn("PauseController not found - direct restart");
             }
         }
         
