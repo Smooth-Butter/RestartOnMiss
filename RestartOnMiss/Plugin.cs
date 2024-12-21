@@ -90,6 +90,7 @@ namespace RestartOnMiss
         public void OnDisable()
         {
             StuffUtils.BSUtilsRemove();
+            StuffUtils.BSMLUtilsRemove();
             ReplayDetector.RemoveReplayEvents();
             
             if (PluginController != null)
