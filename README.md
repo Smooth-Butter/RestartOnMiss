@@ -29,6 +29,7 @@ meaning that it will show one less than you actually had upon restarting (or in 
 
 - Automatically set the value to your PB (based on settings ex bomb hits included) and select which scoreboard it comes from (or pick the lower/higher value)
 - Automatically disable if you have not played the song before
+- maybe work with burst sliders?
 
 ## Extra Settings
 By default, the mod is disabled in FPFC and in replays. If for some reason you'd like to change that (which I do not recommend) you can find them in Settings -> Mod Settings -> RestartOnMiss
