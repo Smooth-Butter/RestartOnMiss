@@ -20,8 +20,8 @@ namespace RestartOnMiss.Utils
 
         public static void LogInstalledMods()
         {
-            Plugin.Log.Info($"BeatLeader installed: {IsBeatLeaderInstalled}");
-            Plugin.Log.Info($"ScoreSaber installed: {IsScoreSaberInstalled}");
+            Plugin.Log.Debug($"BeatLeader installed: {IsBeatLeaderInstalled}");
+            Plugin.Log.Debug($"ScoreSaber installed: {IsScoreSaberInstalled}");
         }
     }
 }
