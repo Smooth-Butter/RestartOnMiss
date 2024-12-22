@@ -7,6 +7,6 @@
                 hover-hint='Turn on to count you getting bad cuts as a miss!'/>
     <bool-setting text='Count Bombs as miss' value='countbombs' apply-on-change='true' 
                 hover-hint='Turn on to count you hitting bombs as a miss!'/>
-    <slider-setting text="Max Misses" min="1" max="25" increment="1" value="maxMiss" integer-only="true" apply-on-change='true' />
+    <slider-setting text="Max Misses" min="1" max="75" increment="1" value="maxMiss" show-buttons='true' integer-only="true" apply-on-change='true' />
   </vertical>
 </settings-container>
