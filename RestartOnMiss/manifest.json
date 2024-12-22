@@ -3,7 +3,7 @@
   "id": "RestartOnMiss",
   "name": "RestartOnMiss",
   "author": "SmoothButter",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Restarts the song when you miss a note!",
   "gameVersion": "1.29.1",
   "dependsOn": {
