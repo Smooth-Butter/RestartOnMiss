@@ -158,7 +158,7 @@ namespace RestartOnMiss
             {
                 var restartMethod = typeof(PauseController).GetMethod(
                     "HandlePauseMenuManagerDidPressRestartButton",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
+                    BindingFlags.Public | BindingFlags.Instance); //1.29.1 is different
 
                 if (restartMethod != null)
                 {
