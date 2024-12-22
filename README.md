@@ -23,9 +23,9 @@ meaning that it will show one less than you actually had upon restarting (or in 
 ![ModSettings.png](RestartOnMiss/Pictures/ModSettings.png)
 ## Planned features
 
-###### <sub>For the record these are not guaranteed to come, however I'm very interested in them and looking making them happen :)<sub/>
+<sub>For the record these are not guaranteed to come, however I'm very interested in them and looking making them happen :)<sub/>
 
-###### <sub>Also, you would be able to enable/disable these</sub>
+<sub>Also, you would be able to enable/disable these</sub>
 
 - Automatically set the value to your PB (based on settings ex bomb hits included) and select which scoreboard it comes from (or pick the lower/higher value)
 - Automatically disable if you have not played the song before
@@ -35,7 +35,7 @@ meaning that it will show one less than you actually had upon restarting (or in 
 By default, the mod is disabled in FPFC and in replays. If for some reason you'd like to change that (which I do not recommend) you can find them in Settings -> Mod Settings -> RestartOnMiss
 ![Settings.png](RestartOnMiss/Pictures/Settings.png)
 
-###### be warned there is a way to soft lock the game if you press esc or exit a play/replay at just the right time in fpfc
+be warned there is a way to soft lock the game if you press esc or exit a play/replay at just the right time in fpfc
 
 ## Credits
 
@@ -51,7 +51,6 @@ By default, the mod is disabled in FPFC and in replays. If for some reason you'd
 
 ## Final notes
 
-If you encounter any bugs or unexpected behaviors other than the beatleader/misscounter quirk please either open an issue here or dm me on discord @ smoothbutter :thumbsup:
-
-If you'd like to contribute I welcome you to do so, feel free to open an issue or a pr!
+If you encounter any bugs or unexpected behaviors other than the beatleader/misscounter quirk please either open an issue here or dm me on discord @ smoothbutter :thumbsup:  
+If you'd like to contribute I welcome you to do so, feel free to open an issue or a PR!
 
