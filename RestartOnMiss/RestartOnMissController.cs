@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+//using System.Threading;
 using UnityEngine;
 using RestartOnMiss.Configuration;
 using RestartOnMiss.ReplayFpfc.FpfcDetection;
@@ -47,6 +48,11 @@ namespace RestartOnMiss
                 Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on on bomb/badcut.");
                 return; 
             }
+
+            if (_isRestarting)
+            {
+                return;
+            }
             
             HandleBadCut(noteController, noteCutInfo);
                 
@@ -84,10 +90,7 @@ namespace RestartOnMiss
             Plugin.Log.Info($"Note missed!! current miss count is {MissCount}");
             LastEvent = "Note Missed!";
             
-            //_isRestarting || 
             CompareMissMaxMiss();
-            
-
         }
 
         private void HandleBadCut(NoteController noteController, NoteCutInfo noteCutInfo)
@@ -148,7 +151,7 @@ namespace RestartOnMiss
         }
 
         private void
-            BeatLeaderSpecificRestart() //I hate this soooooo much - theres probs another way but this is what I have for + the code is a lil bad
+            BeatLeaderSpecificRestart() //I hate this soooooo much - there's probs another way but this is what I have for + the code is a lil bad
         {
             var pauseController = Resources.FindObjectsOfTypeAll<PauseController>().LastOrDefault();
             if (pauseController != null)
@@ -161,6 +164,7 @@ namespace RestartOnMiss
                 {
                     Plugin.Log.Debug("BeatLeader PauseController restart stuff");
                     Plugin.Log.Info($"Restart triggered with {MissCount} misses due to {LastEvent}");
+                    //Thread.Sleep(2000);
                     restartMethod.Invoke(pauseController, null);
                 }
                 else
@@ -174,11 +178,12 @@ namespace RestartOnMiss
             }
         }
         
-        public void OnGameSceneLoaded() //this is so dumb will fix later... maybe
+        public void OnGameSceneLoaded() //this is so dumb, might change but probs not
         {
-            // Plugin.Log.Warn("level started?");
+            // Plugin.Log.Debug("level started?");
             ResetCount();
             _isRestarting = false;
+            LastEvent = "Restarted";
         }
 
         private void ResetCount()
