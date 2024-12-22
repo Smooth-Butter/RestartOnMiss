@@ -46,7 +46,7 @@ be warned there is a way to soft lock the game if you press esc or exit a play/r
 - And the BSMG community
 
 ### Testers
-- [Barracuda312](https://www.twitch.tv/barracuda312)
+- [GPB | almonds](https://beatleader.net/u/76561198311925333)
 - [snoww](https://scoresaber.com/u/76561199168973689)
 
 ## Final notes
