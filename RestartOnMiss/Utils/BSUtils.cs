@@ -47,7 +47,7 @@ namespace RestartOnMiss.Utils
 
         private static void OnNoteMissed(NoteController noteController)
         {
-            Plugin.Log.Debug("note missed");
+            //Plugin.Log.Debug("note missed");
             if (RestartOnMissController.Instance != null)
             {
                 RestartOnMissController.Instance.OnNoteMissed(noteController);
@@ -60,7 +60,7 @@ namespace RestartOnMiss.Utils
         
         private static void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
         {
-            Plugin.Log.Debug("note cut");
+            //Plugin.Log.Debug("note cut");
             if (RestartOnMissController.Instance != null)
             {
                 RestartOnMissController.Instance.OnNoteCut(noteController, noteCutInfo);
