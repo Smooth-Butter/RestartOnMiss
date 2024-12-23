@@ -3,8 +3,6 @@ using System.Reflection;
 //using System.Threading;
 using UnityEngine;
 using RestartOnMiss.Configuration;
-using RestartOnMiss.ReplayFpfc.FpfcDetection;
-using RestartOnMiss.ReplayFpfc.ReplayDetection;
 
 namespace RestartOnMiss
 {
@@ -12,17 +10,16 @@ namespace RestartOnMiss
     {
         private int MaxMisses => PluginConfig.Instance.MaxMisses;
         private int MissCount = 0;
-        private string LastEvent = "";
+        private string _lastEvent = "";
         public static RestartOnMissController Instance { get; private set; }
         public static NoteController NoteController;
-        public static bool IsMultiplayer;
         
         private bool _isRestarting = false;
         private ILevelRestartController _restartController;
         
         private void Awake()
         {
-            // only one instance
+            // only one instance please
             if (Instance != null)
             {
                 Plugin.Log?.Warn($"Instance of {GetType().Name} already exists, destroying.");
@@ -30,25 +27,13 @@ namespace RestartOnMiss
                 return;
             }
 
-            GameObject.DontDestroyOnLoad(this); // Don't destroy 
+            GameObject.DontDestroyOnLoad(this);
             Instance = this;
             Plugin.Log?.Debug($"{name}: Awake()");
         }
 
         public void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
         {
-            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
-            {
-                Plugin.Log.Debug("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on bomb/badcut.");
-                return;
-            }
-            
-            if (!PluginConfig.Instance.Enabled)
-            {
-                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on on bomb/badcut.");
-                return; 
-            }
-
             if (_isRestarting)
             {
                 return;
@@ -60,35 +45,22 @@ namespace RestartOnMiss
             
         } 
         
-        public void OnNoteMissed(NoteController noteController) // this is so so soooo bad - will maybe fix at some point
+        public void OnNoteMissed(NoteController noteController)
         {
-            if (IsMultiplayer)
-            {
-                return;
-            }
             if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType != NoteData.GameplayType.BurstSliderElement)
             {
                 return;
             }
-            if (!PluginConfig.Instance.Enabled)
-            {
-                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
-                return; 
-            }
+            
             if (_isRestarting)
             {
                 Plugin.Log.Debug("level is currently restarting");
                 return;
             }
-            if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
-            {
-                Plugin.Log.Info("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on note miss.");
-                return;
-            }
             
             ++MissCount;
             Plugin.Log.Info($"Note missed!! current miss count is {MissCount}");
-            LastEvent = "Note Missed!";
+            _lastEvent = "Note Missed!";
             
             CompareMissMaxMiss();
         }
@@ -100,7 +72,7 @@ namespace RestartOnMiss
                 if (!noteCutInfo.allIsOK && noteController.noteData.colorType != ColorType.None)
                 {
                     ++MissCount;
-                    LastEvent = "Bad cut!!!";
+                    _lastEvent = "Bad cut!!!";
                     Plugin.Log.Info($"Bad Cut!! current miss count is {MissCount}");
                     CompareMissMaxMiss();
                 }
@@ -114,7 +86,7 @@ namespace RestartOnMiss
                 if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType == NoteData.GameplayType.Bomb)
                 {
                     ++MissCount;
-                    LastEvent = "Hit Bomb!!!";
+                    _lastEvent = "Hit Bomb!!!";
                     Plugin.Log.Info($"Hit Bomb!! current miss count is {MissCount}");
                     CompareMissMaxMiss();
                 }
@@ -141,7 +113,7 @@ namespace RestartOnMiss
                     return;
                 }
                 Plugin.Log.Debug("Calling ILevelRestartController.RestartLevel()");
-                Plugin.Log.Info($"restarted with {MissCount} misses due to {LastEvent}");
+                Plugin.Log.Info($"restarted with {MissCount} misses due to {_lastEvent}");
                 _restartController.RestartLevel();
             }
             else
@@ -151,7 +123,7 @@ namespace RestartOnMiss
         }
 
         private void
-            BeatLeaderSpecificRestart() //I hate this soooooo much - there's probs another way but this is what I have for + the code is a lil bad
+            BeatLeaderSpecificRestart() //I hate this soooooo much - there's probs another way but this is what worked first
         {
             var pauseController = Resources.FindObjectsOfTypeAll<PauseController>().LastOrDefault();
             if (pauseController != null)
@@ -163,7 +135,7 @@ namespace RestartOnMiss
                 if (restartMethod != null)
                 {
                     Plugin.Log.Debug("BeatLeader PauseController restart stuff");
-                    Plugin.Log.Info($"Restart triggered with {MissCount} misses due to {LastEvent}");
+                    Plugin.Log.Info($"Restart triggered with {MissCount} misses due to {_lastEvent}");
                     //Thread.Sleep(2000);
                     restartMethod.Invoke(pauseController, null);
                 }
@@ -178,12 +150,12 @@ namespace RestartOnMiss
             }
         }
         
-        public void OnGameSceneLoaded() //this is so dumb, might change but probs not
+        public void OnGameSceneLoaded()
         {
             // Plugin.Log.Debug("level started?");
             ResetCount();
             _isRestarting = false;
-            LastEvent = "Restarted";
+            _lastEvent = "Restarted";
         }
 
         private void ResetCount()
