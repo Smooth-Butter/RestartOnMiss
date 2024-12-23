@@ -17,24 +17,26 @@ This mod is best thought of as _1 life_ or _4 lives_ **but much more** customiza
 - :warning: On **1.29.1** there is an issue where your score **WILL NOT** submit if you use BetterNoFail <sub>(has not been an issue on other versions)</sub>
 - This mod restarts the game before BeatLeader or CountersPlus register the last miss, bomb hit, or bad cut  
 meaning that it will show one less than you actually had upon restarting (or in BeatLeaders case will show the incorrect amount when looking at the unfinished replay)
+- not an issue but this mod is disabled in multiplayer and campaigns regardless of what you set it to (this is intentional)
 
 ## Pictures!
 
-![ModSettings.png](Pictures/ModSettings.png)
+![ModSettings.png](RestartOnMiss/Pictures/ModSettings.png)
 ## Planned features
 
-###### <sub>For the record these are not guaranteed to come, however I'm very interested in them and looking making them happen :)<sub/>
+<sub>For the record these are not guaranteed to come, however I'm very interested in them and looking making them happen :)<sub/>
 
-###### <sub>Also, you would be able to enable/disable these</sub>
+<sub>Also, you would be able to enable/disable these</sub>
 
 - Automatically set the value to your PB (based on settings ex bomb hits included) and select which scoreboard it comes from (or pick the lower/higher value)
 - Automatically disable if you have not played the song before
+- maybe work with burst sliders?
 
 ## Extra Settings
 By default, the mod is disabled in FPFC and in replays. If for some reason you'd like to change that (which I do not recommend) you can find them in Settings -> Mod Settings -> RestartOnMiss
-![Settings.png](Pictures/Settings.png)
+![Settings.png](RestartOnMiss/Pictures/Settings.png)
 
-###### be warned there is a way to soft lock the game if you press esc or exit a play/replay at just the right time in fpfc
+be warned there is a way to soft lock the game if you press esc or exit a play/replay at just the right time in fpfc
 
 ## Credits
 
@@ -45,12 +47,11 @@ By default, the mod is disabled in FPFC and in replays. If for some reason you'd
 - And the BSMG community
 
 ### Testers
-- [Barracuda312](https://www.twitch.tv/barracuda312)
+- [GPB | almonds](https://beatleader.net/u/76561198311925333)
 - [snoww](https://scoresaber.com/u/76561199168973689)
 
 ## Final notes
 
-If you encounter any bugs or unexpected behaviors other than the beatleader/misscounter quirk please either open an issue here or dm me on discord @ smoothbutter :thumbsup:
-
-If you'd like to contribute I welcome you to do so, feel free to open an issue or a pr!
+If you encounter any bugs or unexpected behaviors other than the beatleader/misscounter quirk please either open an issue here or dm me on discord @ smoothbutter :thumbsup:  
+If you'd like to contribute I welcome you to do so, feel free to open an issue or a PR!
 
