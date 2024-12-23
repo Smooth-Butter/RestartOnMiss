@@ -37,18 +37,18 @@ namespace RestartOnMiss
 
         public void OnNoteCut(NoteController noteController, NoteCutInfo noteCutInfo)
         {
+            if (!PluginConfig.Instance.Enabled)
+            {
+                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on on bomb/badcut.");
+                return; 
+            }
+            
             if ((ReplayDetector.IsInReplay() && !PluginConfig.Instance.EnableInReplay) || (FPFCDetector.FPFCEnabled && !PluginConfig.Instance.EnableInFPFC))
             {
                 Plugin.Log.Debug("RestartOnMiss is disabled IN REPLAY or FPFC. Not restarting on on bomb/badcut.");
                 return;
             }
             
-            if (!PluginConfig.Instance.Enabled)
-            {
-                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on on bomb/badcut.");
-                return; 
-            }
-
             if (_isRestarting)
             {
                 return;
@@ -62,6 +62,11 @@ namespace RestartOnMiss
         
         public void OnNoteMissed(NoteController noteController) // this is so so soooo bad - will maybe fix at some point
         {
+            if (!PluginConfig.Instance.Enabled)
+            {
+                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
+                return; 
+            }
             if (IsMultiplayer)
             {
                 return;
@@ -69,11 +74,6 @@ namespace RestartOnMiss
             if (noteController.noteData.colorType == ColorType.None && noteController.noteData.gameplayType != NoteData.GameplayType.BurstSliderElement)
             {
                 return;
-            }
-            if (!PluginConfig.Instance.Enabled)
-            {
-                Plugin.Log.Debug("RestartOnMiss is disabled. Not restarting on note miss.");
-                return; 
             }
             if (_isRestarting)
             {
