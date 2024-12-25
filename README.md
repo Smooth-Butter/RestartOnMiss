@@ -14,7 +14,7 @@ This mod is best thought of as _1 life_ or _4 lives_ **but much more** customiza
 - Decide whether to count hitting bombs as misses
 
 ## Known issues/quirks
-- :warning: On **1.29.1** there is an issue where your score **WILL NOT** submit if you use BetterNoFail <sub>(has not been an issue on other versions)</sub>
+- :warning: On **1.29.1** there is an issue where your score **WILL NOT** submit if you use PlayFirstSubmitLater's BetterNoFail <sub>(has not been an issue on other versions)</sub>
 - This mod restarts the game before BeatLeader or CountersPlus register the last miss, bomb hit, or bad cut  
 meaning that it will show one less than you actually had upon restarting (or in BeatLeaders case will show the incorrect amount when looking at the unfinished replay)
 - not an issue but this mod is disabled in multiplayer and campaigns regardless of what you set it to (this is intentional)
