@@ -1,0 +1,13 @@
+﻿<settings-container>
+  <vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' preferred-width='90' spacing='0' 
+            anchor-max-y='1.35'>
+    <bool-setting text='Enabled' value='enabled' apply-on-change='true' 
+        hover-hint='Turn RestartOnMiss On/Off'/>
+    <bool-setting text='Count Bad Cuts as miss' value='countbadcuts' apply-on-change='true' 
+        hover-hint='Turn on to count you getting bad cuts as a miss!'/>
+    <bool-setting text='Count Bombs as miss' value='countbombs' apply-on-change='true' 
+        hover-hint='Turn on to count you hitting bombs as a miss!'/>
+    <slider-setting text="Max Misses" min="1" max="75" increment="1" value="maxMiss" show-buttons='true' integer-only="true" apply-on-change='true'
+        hover-hint='How many misses you will restart on!'/>
+  </vertical>
+</settings-container>

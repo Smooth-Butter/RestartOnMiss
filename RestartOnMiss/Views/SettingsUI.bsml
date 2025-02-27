@@ -1,0 +1,12 @@
+﻿<settings-container>
+  <vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' preferred-width='90' spacing='0' 
+            anchor-max-y='1.35'>
+    <bool-setting text='Enabled' value='enabled' apply-on-change='true' 
+                hover-hint='Turn RestartOnMiss On/Off - this can 
+                also be adjusted in the modifiers UI' />
+    <bool-setting text='Enabled in Replay' value='enabledinreplay' apply-on-change='true'
+                hover-hint='Turn RestartOnMiss On/Off for replays' />
+    <bool-setting text='Enabled in FPFC' value='enabledinfpfc' apply-on-change='true'
+                hover-hint='Turn RestartOnMiss On/Off in fpfc' />
+  </vertical>
+</settings-container>

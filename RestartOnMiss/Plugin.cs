@@ -1,19 +1,16 @@
 ﻿using System;
 using IPALogger = IPA.Logging.Logger;
-using System.Linq;
-using System.Reflection;
-using BeatSaberMarkupLanguage.Settings;
 using IPA;
-using IPA.Config;
 using IPA.Config.Stores;
-using IPA.Loader;
 using UnityEngine;
-using BS_Utils;
-using RestartOnMiss.UI;
-using BS_Utils.Utilities;
 using RestartOnMiss.Configuration;
+using RestartOnMiss.Harmony.ScoreSaberPatch;
+using RestartOnMiss.Installers;
+using RestartOnMiss.ReplayFpfc.FpfcDetection;
+using RestartOnMiss.ReplayFpfc.ReplayDetection;
 using Config = IPA.Config.Config;
-using HarmonyLib;
+using SiraUtil.Zenject;
+using RestartOnMiss.Utils;
 
 namespace RestartOnMiss
 {
@@ -25,20 +22,15 @@ namespace RestartOnMiss
         
         internal static Plugin instance { get; private set; }
         internal static IPALogger Log { get; private set; }
+        private HarmonyLib.Harmony _harmony;
         
         
         
-        internal static string Name => "AutoPauseStealth";
-        internal static RestartOnMissController PluginController { get { return RestartOnMissController.instance; } }
+        internal static RestartOnMissController PluginController { get { return RestartOnMissController.Instance; } }
         
         
         [Init]
-        /// <summary>
-        /// Called when the plugin is first loaded by IPA (either when the game starts or when the plugin is enabled if it starts disabled).
-        /// [Init] methods that use a Constructor or called before regular methods like InitWithConfig.
-        /// Only use [Init] with one Constructor.
-        /// </summary>
-        public Plugin(IPALogger logger, Config conf)
+        public Plugin(IPALogger logger, Config conf, Zenjector zenjector)
         {
             instance = this;
             Log = logger;
@@ -46,6 +38,9 @@ namespace RestartOnMiss
             
             PluginConfig.Instance = conf.Generated<PluginConfig>();
             Log.Debug("Config loaded");
+
+            //zenjector.Install(Location.StandardPlayer, Container => Container.BindInterfacesTo<ModUI>().AsSingle());
+            zenjector.Install<MenuInstaller>(Location.Menu);
         }
 
         #region BSIPA Config
@@ -66,105 +61,60 @@ namespace RestartOnMiss
         public void OnApplicationStart()
         {
             // start RestartOnMissController if it doesn't exist
-            if (RestartOnMissController.instance == null)
+            if (RestartOnMissController.Instance == null)
             {
-
-                Log.Debug("RestartOnMissController instantiated and set to DontDestroyOnLoad.");
+                Log.Debug("RestartOnMissController instantiated");
             }
         }
 
         [OnEnable]
         public void OnEnable()
         {
-            Log.Debug("Plugin enabled, subscribing to BSEvents");
-            BSEvents.gameSceneLoaded += OnGameSceneLoaded;
-            BSEvents.noteWasMissed += OnNoteMissedBSUtils;
+            StuffUtils.BSUtilsAdd();
+            StuffUtils.BSMLUtilsAdd();
+            ModCheck.Initialize();
+            ReplayDetector.AddReplayEvents();
+            FPFCDetector.Initialize();
             
-            if (RestartOnMissController.instance == null)
+            if (RestartOnMissController.Instance == null)
             {
                 new GameObject("RestartOnMissController").AddComponent<RestartOnMissController>();
                 Log.Debug("RestartOnMissController instantiated");
             }
             
-            BeatSaberMarkupLanguage.Util.MainMenuAwaiter.MainMenuInitializing += OnMainMenuInit;
-            new GameObject("RestartOnMissController").AddComponent<RestartOnMissController>();
-            
-            ApplyHarmonyPatches();
-        }
-
-        public void OnMainMenuInit()
-        {
-            BSMLSettings.Instance.AddSettingsMenu("RestartOnMiss", "RestartOnMiss.UI.ModifiersUI.bsml", new ModifierUI());
-            Log.Debug("RestartOnMiss: BSML settings menu registered.");
+            ApplyHarmonyPatches();//temp for debug
         }
 
         
         [OnDisable]
         public void OnDisable()
         {
-            Log.Debug("Plugin disabled, unsubscribing from BSEvents");
-            BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
-            BSEvents.noteWasMissed -= OnNoteMissedBSUtils;
-            
-            BSMLSettings.Instance.RemoveSettingsMenu(PluginConfig.Instance);
+            StuffUtils.BSUtilsRemove();
+            StuffUtils.BSMLUtilsRemove();
+            ReplayDetector.RemoveReplayEvents();
             
             if (PluginController != null)
                 GameObject.Destroy(PluginController);
             
             if (harmony != null)
-                RemoveHarmonyPatches();
+                RemoveHarmonyPatches();//temp for debug
         }
         
-        private void OnGameSceneLoaded()
-        {
-            Log.Debug("Game scene loaded. Attempting to find ILevelRestartController implementer...");
-            RestartOnMissController.instance.OnGameSceneLoaded();
-            
-            var allBehaviours = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
-            // attempt to find the first one that implements ILevelRestartController
-            var restartController = allBehaviours.OfType<ILevelRestartController>().FirstOrDefault();
 
-            if (restartController == null)
-            {
-                Log.Warn("No ILevelRestartController implementer found. Cannot restart level.");
-            }
-            else
-            {
-                Log.Debug("ILevelRestartController implementer found after game scene loaded.");
-                if (RestartOnMissController.instance != null)
-                {
-                    RestartOnMissController.instance.SetILevelRestartController(restartController);
-                }
-            }
-        }
-
-        private void OnNoteMissedBSUtils(NoteController noteController)
-        {
-            Log.Debug("note missed");
-            if (RestartOnMissController.instance != null)
-            {
-                RestartOnMissController.instance.OnNoteMissed(noteController);
-            }
-            else
-            {
-                Log.Warn("RestartOnMissController instance not found. Cannot restart level.");
-            }
-        }
         
         #region Harmony
-        public static void ApplyHarmonyPatches()
+        public void ApplyHarmonyPatches()
         {
-
+            _harmony = new HarmonyLib.Harmony("com.github.SmoothButter.RestartOnMiss");
+            SSReplayPatches.ApplyPatches(_harmony);
             Log.Debug("Applying Harmony patches.");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
             
         }
 
-        public static void RemoveHarmonyPatches()
+        public void RemoveHarmonyPatches()
         {
             try
             {
-                // Removes all patches with this HarmonyId
                 //harmony.UnpatchAll(HarmonyId);
                 harmony.UnpatchSelf();
             }
