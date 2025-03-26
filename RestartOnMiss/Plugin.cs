@@ -42,20 +42,6 @@ namespace RestartOnMiss
             //zenjector.Install(Location.StandardPlayer, Container => Container.BindInterfacesTo<ModUI>().AsSingle());
             zenjector.Install<MenuInstaller>(Location.Menu);
         }
-
-        #region BSIPA Config
-
-        //Uncomment to use BSIPA's config
-        /*
-        [Init]
-        public void InitWithConfig(Config conf)
-        {
-            Configuration.PluginConfig.Instance = conf.Generated<Configuration.PluginConfig>();
-            Log.Debug("Config loaded");
-        }
-        */
-
-        #endregion
         
         [OnStart]
         public void OnApplicationStart()
