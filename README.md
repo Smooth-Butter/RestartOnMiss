@@ -1,4 +1,4 @@
-# RestartOnMiss
+# RestartOnMiss 
 
 ---
 ### What is this mod?
@@ -20,7 +20,7 @@ meaning that it will show one less than you actually had upon restarting (or in 
 
 ## Pictures!
 
-![ModSettings.png](Pictures/ModSettings.png)
+![ModSettings.png](RestartOnMiss/Pictures/ModSettings.png)
 ## Planned features
 
 ###### <sub>For the record these are not guaranteed to come, however I'm very interested in them and looking making them happen :)<sub/>
@@ -32,7 +32,7 @@ meaning that it will show one less than you actually had upon restarting (or in 
 
 ## Extra Settings
 By default, the mod is disabled in FPFC and in replays. If for some reason you'd like to change that (which I do not recommend) you can find them in Settings -> Mod Settings -> RestartOnMiss
-![Settings.png](Pictures/Settings.png)
+![Settings.png](RestartOnMiss/Pictures/Settings.png)
 
 ###### be warned there is a way to soft lock the game if you press esc or exit a play/replay at just the right time in fpfc
 
